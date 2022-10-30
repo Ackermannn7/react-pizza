@@ -8,7 +8,7 @@ function Header() {
           <div className="header__logo">
             <img
               width="38"
-              src="/static/media/pizza-logo.56ac87032d8f6fdf863326acd06c0d97.svg"
+              src="img/pizza-logo.svg"
               alt="Pizza logo"
             />
             <div>
@@ -55,7 +55,7 @@ function Header() {
           <input
             className="Search_input__klILD"
             placeholder="Поиск пиццы..."
-            value=""
+            defaultValue=""
           />
         </div>
         <div className="header__cart">
