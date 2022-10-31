@@ -1,12 +1,11 @@
 import React from "react";
-
+import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Categories from "./components/Categories";
-import Sort from "./components/Sort";
-import PizzaBlock from "./components/PizzaBlock";
-import "./scss/app.scss";
-import pizzas from "./assets/pizzas.json";
+import Home from "./pages/Home";
+import Cart from "./pages/Cart";
+import NotFound from "./pages/NotFound";
 
+import "./scss/app.scss";
 
 function App() {
   return (
@@ -14,63 +13,11 @@ function App() {
       <Header />
       <div className="content">
         <div className="container">
-          <div className="content__top">
-            <Categories />
-            <Sort />
-          </div>
-          <h2 className="content__title">Все пиццы</h2>
-          <div className="content__items">
-            {pizzas.map((obj) => (
-              <PizzaBlock key={obj.id} {...obj} />
-            ))}
-          </div>
-          {/* <ul className="Pagination_root__uwB0O">
-            <li className="previous disabled">
-              <a
-                className=" "
-                tabIndex="-1"
-                role="button"
-                aria-disabled="true"
-                aria-label="Previous page"
-                rel="prev"
-              >
-                &lt;
-              </a>
-            </li>
-            <li className="selected">
-              <a
-                rel="canonical"
-                role="button"
-                tabIndex="-1"
-                aria-label="Page 1 is your current page"
-                aria-current="page"
-              >
-                1
-              </a>
-            </li>
-            <li>
-              <a rel="next" role="button" tabIndex="0" aria-label="Page 2">
-                2
-              </a>
-            </li>
-            <li>
-              <a role="button" tabIndex="0" aria-label="Page 3">
-                3
-              </a>
-            </li>
-            <li className="next">
-              <a
-                className=""
-                tabIndex="0"
-                role="button"
-                aria-disabled="false"
-                aria-label="Next page"
-                rel="next"
-              >
-                &gt;
-              </a>
-            </li>
-          </ul> */}
+          <Routes>
+            <Route path="" element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </div>
       </div>
     </div>
