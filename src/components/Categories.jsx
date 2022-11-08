@@ -1,6 +1,5 @@
 import React from "react";
-function Categories() {
-  const [categorySelected, setCategorySelected] = React.useState(0);
+function Categories({ value, onSelectCategory }) {
 
   const categories = [
     "Все",
@@ -13,15 +12,15 @@ function Categories() {
   return (
     <div className="categories">
       <ul>
-        {categories.map((category, index) => (
+        {categories.map((categoryName, index) => (
           <li
             key={index}
             onClick={() => {
-              setCategorySelected(index);
+              onSelectCategory(index);
             }}
-            className={categorySelected === index ? "active" : ""}
+            className={value === index ? "active" : ""}
           >
-            {category}
+            {categoryName}
           </li>
         ))}
       </ul>
