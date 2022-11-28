@@ -1,6 +1,14 @@
 .root {
   position: relative;
   left: -120px;
+  @media (max-width: 767px) {
+    padding-top: 30px;
+    left: 0px;
+  }
+  @media (max-width: 992px) {
+    padding-top: 30px;
+    left: -50px;
+  }
 }
 
 .icon {
@@ -10,6 +18,12 @@
   position: absolute;
   left: 15px;
   top: 10px;
+  @media(max-width: 767px){
+    top: 40px;
+  }
+  @media (max-width: 992px) {
+    top: 40px;
+  }
 }
 .input {
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -19,7 +33,12 @@
   border-radius: 10px;
   font-size: 16px;
   transition: all 0.15s ease-in-out;
-  
+  @media (max-width: 767px) {
+    width: 200px;
+  }
+  @media(max-width: 992px){
+    width: 250px;
+  }
 }
 
 .clearIcon {
@@ -30,7 +49,7 @@
   right: 15px;
   top: 15px;
   cursor: pointer;
-  &:hover{
+  &:hover {
     opacity: 0.8;
   }
 }

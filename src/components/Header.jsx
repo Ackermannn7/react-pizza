@@ -18,7 +18,7 @@ function Header() {
         <Search />
         <div className="header__cart">
           <Link className="button button--cart" to="/cart">
-            <span>0 ₽</span>
+            <span>0 </span>
             <div className="button__delimiter"></div>
             <svg
               width="18"

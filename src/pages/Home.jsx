@@ -1,5 +1,7 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 
+import { setCategoryId } from "../redux/slices/filterSlice";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
@@ -8,22 +10,25 @@ import Pagination from "../components/Pagination";
 import { SearchContext } from "../App";
 
 function Home() {
+  const dispatch = useDispatch();
+
+  const { categoryId, sort } = useSelector((state) => state.filterReducer);
+  
   const { searchValue } = React.useContext(SearchContext);
   // https://635fa1ae3e8f65f283b79aef.mockapi.io/items
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const [categoryId, setCategoryId] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [sortType, setSortType] = React.useState({
-    name: "популярности",
-    sortProp: "rating",
-  });
+
+  const onSelectCategory = (id) => {
+    dispatch(setCategoryId(id));
+  };
 
   React.useEffect(() => {
     setIsLoading(true);
-    const order = sortType.sortProp.includes("-") ? "asc" : "desc";
-    const sortBy = sortType.sortProp.replace("-", "");
+    const order = sort.sortProp.includes("-") ? "asc" : "desc";
+    const sortBy = sort.sortProp.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
     fetch(
@@ -37,7 +42,7 @@ function Home() {
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
-  }, [categoryId, sortType, searchValue, currentPage]);
+  }, [categoryId, sort.sortProp, searchValue, currentPage]);
 
   const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
   // .filter((obj) => {
@@ -56,9 +61,9 @@ function Home() {
       <div className="content__top">
         <Categories
           value={categoryId}
-          onSelectCategory={(id) => setCategoryId(id)}
+          onSelectCategory={(id) => onSelectCategory(id)}
         />
-        <Sort value={sortType} onChangeSort={(id) => setSortType(id)} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>
