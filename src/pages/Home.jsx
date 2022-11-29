@@ -1,7 +1,8 @@
 import React from "react";
+import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 
-import { setCategoryId } from "../redux/slices/filterSlice";
+import { setCategoryId, setCurrentPage } from "../redux/slices/filterSlice";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
@@ -12,17 +13,21 @@ import { SearchContext } from "../App";
 function Home() {
   const dispatch = useDispatch();
 
-  const { categoryId, sort } = useSelector((state) => state.filterReducer);
-  
+  const { categoryId, sort, currentPage } = useSelector(
+    (state) => state.filterReducer
+  );
+
   const { searchValue } = React.useContext(SearchContext);
   // https://635fa1ae3e8f65f283b79aef.mockapi.io/items
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const [currentPage, setCurrentPage] = React.useState(1);
-
   const onSelectCategory = (id) => {
     dispatch(setCategoryId(id));
+  };
+
+  const onChangePage = (number) => {
+    dispatch(setCurrentPage(number));
   };
 
   React.useEffect(() => {
@@ -31,14 +36,12 @@ function Home() {
     const sortBy = sort.sortProp.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
-    fetch(
-      `https://635fa1ae3e8f65f283b79aef.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .then((json) => {
-        setItems(json);
+    axios
+      .get(
+        `https://635fa1ae3e8f65f283b79aef.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
+      )
+      .then((response) => {
+        setItems(response.data);
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
@@ -67,7 +70,7 @@ function Home() {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>
-      <Pagination onChangePage={(number) => setCurrentPage(number)} />
+      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
 }
