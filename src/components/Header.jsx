@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Search from "./Search";
+import { Search } from "./";
 
-function Header() {
+export const Header = () => {
   return (
     <div className="header">
       <div className="container">
@@ -55,6 +55,4 @@ function Header() {
       </div>
     </div>
   );
-}
-
-export default Header;
+};

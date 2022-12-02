@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Cart() {
+export const Cart = () => {
   return (
     <div className="container container--cart">
       <div class="cart">
@@ -420,5 +420,4 @@ function Cart() {
       </div>
     </div>
   );
-}
-export default Cart;
+};

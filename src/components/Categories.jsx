@@ -1,6 +1,5 @@
 import React from "react";
-function Categories({ value, onSelectCategory }) {
-
+export const Categories = ({ value, onSelectCategory }) => {
   const categories = [
     "Все",
     "Мясные",
@@ -26,5 +25,4 @@ function Categories({ value, onSelectCategory }) {
       </ul>
     </div>
   );
-}
-export default Categories;
+};

@@ -4,9 +4,9 @@ import { SearchContext } from "../../App";
 
 import styles from "./Search.module.scss";
 
-function Search() {
+export const Search =()=> {
   const [value, setValue] = React.useState("");
-  const { searchValue, setSearchValue } = React.useContext(SearchContext);
+  const { setSearchValue } = React.useContext(SearchContext);
 
   const inputRef = React.useRef();
 
@@ -72,6 +72,5 @@ function Search() {
       )}
     </div>
   );
-}
+};
 
-export default Search;

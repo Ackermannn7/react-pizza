@@ -1,24 +1,38 @@
 import React from "react";
 import axios from "axios";
+import qs from "qs";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { setCategoryId, setCurrentPage } from "../redux/slices/filterSlice";
-import Categories from "../components/Categories";
-import Sort from "../components/Sort";
-import PizzaBlock from "../components/PizzaBlock";
-import Skeleton from "../components/PizzaBlock/Skeleton";
-import Pagination from "../components/Pagination";
+import {
+  Categories,
+  Sort,
+  PizzaBlock,
+  Skeleton,
+  Pagination,
+} from "../components";
+
+import {
+  setCategoryId,
+  setCurrentPage,
+  setFilters,
+} from "../redux/slices/filterSlice";
+
+import { sortList } from "../components/Sort";
+
 import { SearchContext } from "../App";
 
 function Home() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isSearch = React.useRef(false);
+  const isMounted = React.useRef(false);
 
   const { categoryId, sort, currentPage } = useSelector(
     (state) => state.filterReducer
   );
 
   const { searchValue } = React.useContext(SearchContext);
-  // https://635fa1ae3e8f65f283b79aef.mockapi.io/items
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -31,11 +45,25 @@ function Home() {
   };
 
   React.useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+      const sort = sortList.find((obj) => obj.sortProp === params.sortProp);
+      dispatch(
+        setFilters({
+          ...params,
+          sort,
+        })
+      );
+    }
+  }, []);
+
+  React.useEffect(() => {
     setIsLoading(true);
     const order = sort.sortProp.includes("-") ? "asc" : "desc";
     const sortBy = sort.sortProp.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
+    // https://635fa1ae3e8f65f283b79aef.mockapi.io/items
     axios
       .get(
         `https://635fa1ae3e8f65f283b79aef.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
@@ -46,6 +74,15 @@ function Home() {
       });
     window.scrollTo(0, 0);
   }, [categoryId, sort.sortProp, searchValue, currentPage]);
+
+  React.useEffect(() => {
+    const queryString = qs.stringify({
+      sortProp: sort.sortProp,
+      categoryId,
+      currentPage,
+    });
+    navigate(`?${queryString}`);
+  }, [categoryId, sort.sortProp, currentPage]);
 
   const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
   // .filter((obj) => {
