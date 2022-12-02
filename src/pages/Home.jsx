@@ -44,20 +44,7 @@ function Home() {
     dispatch(setCurrentPage(number));
   };
 
-  React.useEffect(() => {
-    if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
-      const sort = sortList.find((obj) => obj.sortProp === params.sortProp);
-      dispatch(
-        setFilters({
-          ...params,
-          sort,
-        })
-      );
-    }
-  }, []);
-
-  React.useEffect(() => {
+  const fetchPizzas = () => {
     setIsLoading(true);
     const order = sort.sortProp.includes("-") ? "asc" : "desc";
     const sortBy = sort.sortProp.replace("-", "");
@@ -72,26 +59,47 @@ function Home() {
         setItems(response.data);
         setIsLoading(false);
       });
-    window.scrollTo(0, 0);
-  }, [categoryId, sort.sortProp, searchValue, currentPage]);
+  };
 
+  // Если изменили параметры и был первый рендер
   React.useEffect(() => {
-    const queryString = qs.stringify({
-      sortProp: sort.sortProp,
-      categoryId,
-      currentPage,
-    });
-    navigate(`?${queryString}`);
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortProp: sort.sortProp,
+        categoryId,
+        currentPage,
+      });
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true;
   }, [categoryId, sort.sortProp, currentPage]);
 
-  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
-  // .filter((obj) => {
-  //   if (obj.title.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) {
-  //     return true;
-  //   }
-  //   return false;
-  // })
+  // Если был первый рендер, то проверяем URL-параметры и сохраняем в редаксе
+  React.useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+      const sort = sortList.find((obj) => obj.sortProp === params.sortProp);
+      dispatch(
+        setFilters({
+          ...params,
+          sort,
+        })
+      );
 
+      isSearch.current = true;
+    }
+  }, []);
+
+  // Если был первый рендер, то запрашиваем пиццы
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    if (!isSearch.current) {
+      fetchPizzas();
+    }
+    isSearch.current = false;
+  }, [categoryId, sort.sortProp, searchValue, currentPage]);
+
+  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
   const skeletons = [...new Array(6)].map((_, index) => (
     <Skeleton key={index} />
   ));
