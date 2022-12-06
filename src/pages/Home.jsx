@@ -29,7 +29,7 @@ function Home() {
   const isMounted = React.useRef(false);
 
   const { categoryId, sort, currentPage } = useSelector(
-    (state) => state.filterReducer
+    (state) => state.filter
   );
 
   const { searchValue } = React.useContext(SearchContext);
