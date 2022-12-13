@@ -38,14 +38,17 @@ const cartSlice = createSlice({
         return obj.price * obj.count + sum;
       }, 0);
     },
-    clearItem(state) {
+    clearItems(state) {
       state.items = [];
       state.totalPrice = 0;
     },
   },
 });
 
+export const cartSelector = (state) => state.cart;
+export const cartItemSelectorById = (id) => (state) =>
+  state.cart.items.find((obj) => obj.id === id);
 // Action creators are generated for each case reducer function
-export const { addItem, itemMinus, removeItem, clearItem } = cartSlice.actions;
+export const { addItem, itemMinus, removeItem, clearItems } = cartSlice.actions;
 
 export default cartSlice.reducer;

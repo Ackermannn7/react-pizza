@@ -3,12 +3,18 @@ import axios from "axios";
 
 export const fetchPizzas = createAsyncThunk(
   "pizza/fetchPizzasStatus",
-  async (params) => {
+  async (params, thunkAPI) => {
     const { order, sortBy, category, search, currentPage } = params;
     const { data } = await axios.get(
       `https://635fa1ae3e8f65f283b79aef.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
     );
+
     return data;
+    // if (data.length === 0) {
+    //   return thunkAPI.rejectWithValue("Pizzas are not available!");
+    // }
+
+    // return thunkAPI.fulfillWithValue(data);
   }
 );
 
@@ -32,11 +38,13 @@ const pizzaSlice = createSlice({
       console.log("Sending Pizzas");
     },
     [fetchPizzas.fulfilled]: (state, action) => {
+      console.log(action, "fulfilled");
       state.items = action.payload;
       state.status = "success";
       console.log("OK");
     },
-    [fetchPizzas.rejected]: (state) => {
+    [fetchPizzas.rejected]: (state, action) => {
+      console.log(action, "rejected");
       state.status = "error";
       state.items = [];
       console.log("Error");
@@ -44,6 +52,7 @@ const pizzaSlice = createSlice({
   },
 });
 
+export const pizzaDataSelector = (state) => state.pizza;
 // Action creators are generated for each case reducer function
 export const { setItems } = pizzaSlice.actions;
 

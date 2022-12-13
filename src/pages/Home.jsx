@@ -12,24 +12,25 @@ import {
 } from "../components";
 
 import {
+  filterSelector,
   setCategoryId,
   setCurrentPage,
   setFilters,
 } from "../redux/slices/filterSlice";
-import { fetchPizzas } from "../redux/slices/pizzaSlice";
+
+import { fetchPizzas, pizzaDataSelector } from "../redux/slices/pizzaSlice";
 
 import { sortList } from "../components/Sort";
 
-import { SearchContext } from "../App";
 
 function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isMounted = React.useRef(false);
 
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizza);
-  const { searchValue } = React.useContext(SearchContext);
+  const { categoryId, sort, currentPage, searchValue } =
+    useSelector(filterSelector);
+  const { items, status } = useSelector(pizzaDataSelector);
 
   const onSelectCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -72,7 +73,7 @@ function Home() {
         currentPage,
       };
       const queryString = qs.stringify(params);
-      
+
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
