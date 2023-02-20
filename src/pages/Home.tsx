@@ -1,6 +1,6 @@
 import React from "react";
 import qs from "qs";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -22,8 +22,7 @@ import { fetchPizzas, pizzaDataSelector } from "../redux/slices/pizzaSlice";
 
 import { sortList } from "../components/Sort";
 
-
-function Home() {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isMounted = React.useRef(false);
@@ -32,12 +31,12 @@ function Home() {
     useSelector(filterSelector);
   const { items, status } = useSelector(pizzaDataSelector);
 
-  const onSelectCategory = (id) => {
+  const onSelectCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
 
-  const onChangePage = (number) => {
-    dispatch(setCurrentPage(number));
+  const onChangePage = (page: number) => {
+    dispatch(setCurrentPage(page));
   };
 
   const getPizzas = async () => {
@@ -47,6 +46,7 @@ function Home() {
     const search = searchValue ? `&search=${searchValue}` : "";
     // https://635fa1ae3e8f65f283b79aef.mockapi.io/items
     dispatch(
+      // @ts-ignore
       fetchPizzas({
         order,
         sortBy,
@@ -98,7 +98,11 @@ function Home() {
     getPizzas();
   }, [categoryId, sort.sortProp, searchValue, currentPage]);
 
-  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  const pizzas = items.map((obj: any) => (
+    <Link key={obj.id} to={`/pizza/${obj.id}`}>
+      <PizzaBlock {...obj} />
+    </Link>
+  ));
   const skeletons = [...new Array(6)].map((_, index) => (
     <Skeleton key={index} />
   ));
@@ -108,7 +112,7 @@ function Home() {
       <div className="content__top">
         <Categories
           value={categoryId}
-          onSelectCategory={(id) => onSelectCategory(id)}
+          onSelectCategory={(id: number) => onSelectCategory(id)}
         />
         <Sort />
       </div>
@@ -129,6 +133,6 @@ function Home() {
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
-}
+};
 
 export default Home;
