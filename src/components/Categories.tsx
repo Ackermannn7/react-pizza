@@ -1,5 +1,4 @@
 import React from "react";
-
 type CategoriesProps = {
   value: number;
   onSelectCategory: (index: number) => void;
@@ -12,25 +11,24 @@ const categories = [
   "Острые",
   "Закрытые",
 ];
-export const Categories: React.FC<CategoriesProps> = ({
-  value,
-  onSelectCategory,
-}) => {
-  return (
-    <div className="categories">
-      <ul>
-        {categories.map((categoryName, index) => (
-          <li
-            key={index}
-            onClick={() => {
-              onSelectCategory(index);
-            }}
-            className={value === index ? "active" : ""}
-          >
-            {categoryName}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+export const Categories: React.FC<CategoriesProps> = React.memo(
+  ({ value, onSelectCategory }) => {
+    return (
+      <div className="categories">
+        <ul>
+          {categories.map((categoryName, index) => (
+            <li
+              key={index}
+              onClick={() => {
+                onSelectCategory(index);
+              }}
+              className={value === index ? "active" : ""}
+            >
+              {categoryName}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+);

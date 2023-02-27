@@ -1,6 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, removeItem, itemMinus } from "../redux/slices/cartSlice";
+import clsx from "clsx";
+import {
+  addItem,
+  removeItem,
+  itemMinus,
+  CartItem,
+} from "../redux/slices/cartSlice";
 type CartItemProps = {
   id: string;
   title: string;
@@ -10,7 +16,7 @@ type CartItemProps = {
   count: number;
   imageUrl: string;
 };
-const CartItem: React.FC<CartItemProps> = ({
+const CartItemBlock: React.FC<CartItemProps> = ({
   id,
   title,
   type,
@@ -22,7 +28,7 @@ const CartItem: React.FC<CartItemProps> = ({
   const dispatch = useDispatch();
 
   const onClickAdd = () => {
-    dispatch(addItem({ id }));
+    dispatch(addItem({ id } as CartItem));
   };
   const onClickRemove = () => {
     dispatch(itemMinus(id));
@@ -47,7 +53,10 @@ const CartItem: React.FC<CartItemProps> = ({
         <button
           disabled={count === 1}
           onClick={onClickRemove}
-          className="button button--outline button--circle cart__item-count-minus"
+          className={clsx(
+            "button button--outline button--circle cart__item-count-minus",
+            { "cart__item-count-minus--disabled": count === 1 }
+          )}
         >
           <svg
             width="10"
@@ -118,4 +127,4 @@ const CartItem: React.FC<CartItemProps> = ({
     </div>
   );
 };
-export default CartItem;
+export default CartItemBlock;

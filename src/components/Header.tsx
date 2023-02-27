@@ -13,7 +13,10 @@ export const Header = () => {
 
   console.log(location);
 
-  const totalCount = items.reduce((sum: number, item:any) => sum + item.count, 0);
+  const totalCount = items.reduce(
+    (sum: number, item: any) => sum + item.count,
+    0
+  );
   return (
     <div className="header">
       <div className="container">
@@ -26,7 +29,7 @@ export const Header = () => {
             </div>
           </div>
         </Link>
-        <Search />
+        {location.pathname !== "/cart" && <Search />}
         <div className="header__cart">
           {location.pathname !== "/cart" && (
             <Link className="button button--cart" to="/cart">
