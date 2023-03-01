@@ -1,13 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import useWhyDidYouUpdate from "ahooks/lib/useWhyDidYouUpdate";
-
-import {
-  setSort,
-  Sort,
-  SortPropertyEnum,
-  sortSelector,
-} from "../redux/slices/filterSlice";
+import { Sort as SortType, SortPropertyEnum } from "../redux/filter/types";
+import { setSort } from "../redux/filter/slice";
 
 type SortItem = {
   name: string;
@@ -17,7 +11,7 @@ type PopUpClick = MouseEvent & {
   path: Node[];
 };
 type SortPopupProps = {
-  value: Sort;
+  value: SortType;
 };
 export const sortList: SortItem[] = [
   { name: "популярности(DESC)", sortProp: SortPropertyEnum.RATING_DESC },
@@ -28,12 +22,10 @@ export const sortList: SortItem[] = [
   { name: "алфавиту(ASC)", sortProp: SortPropertyEnum.TITLE_ASC },
 ];
 
-export const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
+export const Sort: React.FC<SortPopupProps> = React.memo(({ value }) => {
   const dispatch = useDispatch();
 
   const sortRef = React.useRef<HTMLDivElement>(null);
-
-  useWhyDidYouUpdate("SortPopup", { value });
 
   const [open, setOpen] = React.useState(false);
 

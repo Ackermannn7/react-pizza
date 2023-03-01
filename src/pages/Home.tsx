@@ -5,29 +5,19 @@ import { useSelector } from "react-redux";
 
 import {
   Categories,
-  SortPopup,
+  Sort,
   PizzaBlock,
   Skeleton,
   Pagination,
 } from "../components";
 
-import {
-  filterSelector,
-  FilterSliceState,
-  setCategoryId,
-  setCurrentPage,
-  setFilters,
-} from "../redux/slices/filterSlice";
-
 import { useAppDispatch } from "../redux/store";
 
-import {
-  fetchPizzas,
-  pizzaDataSelector,
-  SearchPizzaParams,
-} from "../redux/slices/pizzaSlice";
-
 import { sortList } from "../components/Sort";
+import { filterSelector } from "../redux/filter/selectors";
+import { pizzaDataSelector } from "../redux/pizza/selectors";
+import { setCategoryId, setCurrentPage } from "../redux/filter/slice";
+import { fetchPizzas } from "../redux/pizza/slice";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -114,7 +104,7 @@ const Home: React.FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories value={categoryId} onSelectCategory={onSelectCategory} />
-        <SortPopup value={sort} />
+        <Sort value={sort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === "error" ? (
